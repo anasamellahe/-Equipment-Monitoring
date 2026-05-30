@@ -1,0 +1,32 @@
+services:
+  backend:
+    build: ./backend
+    container_name: monitoring-backend
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./backend/data:/app/data
+    networks:
+      - monitoring-net
+
+  frontend:
+    build: ./frontend
+    container_name: monitoring-frontend
+    ports:
+      - "8090:80"
+    depends_on:
+      - backend
+    networks:
+      - monitoring-net
+
+  simulator:
+    build: ./simulator
+    container_name: monitoring-simulator
+    depends_on:
+      - backend
+    networks:
+      - monitoring-net
+
+networks:
+  monitoring-net:
+    driver: bridge
